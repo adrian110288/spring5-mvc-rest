@@ -2,6 +2,7 @@ package guru.springfamework.service;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
 
 import java.util.List;
@@ -30,5 +31,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO getCustomerByName(String name) {
         return customerMapper.customerToCustomerDTO(customerRepository.findByName(name));
+    }
+
+    @Override
+    public CustomerDTO createNewCustomer(CustomerDTO customerDto) {
+
+        Customer customer = customerMapper.customerDtoToCustomer(customerDto);
+        Customer savedCustomer = customerRepository.save(customer);
+
+        return customerMapper.customerToCustomerDTO(savedCustomer);
     }
 }
