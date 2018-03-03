@@ -57,4 +57,12 @@ public class CustomerController {
         CustomerDTO updatedCustomer = customerService.patchCustomer(Long.valueOf(id), customer);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCustomerById(@PathVariable String id) {
+
+        customerService.deleteCustomerById(Long.valueOf(id));
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
 }
