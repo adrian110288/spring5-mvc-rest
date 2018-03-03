@@ -4,10 +4,12 @@ import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
@@ -30,15 +32,28 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDTO getCustomerByName(String name) {
-        return customerMapper.customerToCustomerDTO(customerRepository.findByName(name));
+        return customerMapper.customerToCustomerDTO(customerRepository.findByFirstname(name));
     }
 
     @Override
     public CustomerDTO createNewCustomer(CustomerDTO customerDto) {
 
         Customer customer = customerMapper.customerDtoToCustomer(customerDto);
-        Customer savedCustomer = customerRepository.save(customer);
+        return saveAndReturnDTO(customer);
+    }
 
+    @Override
+    public CustomerDTO saveCustomerByDto(Long id, CustomerDTO customerDto) {
+
+        Customer customer = customerMapper.customerDtoToCustomer(customerDto);
+        customer.setId(id);
+
+        return saveAndReturnDTO(customer);
+    }
+
+    private CustomerDTO saveAndReturnDTO(Customer customer) {
+
+        Customer savedCustomer = customerRepository.save(customer);
         return customerMapper.customerToCustomerDTO(savedCustomer);
     }
 }

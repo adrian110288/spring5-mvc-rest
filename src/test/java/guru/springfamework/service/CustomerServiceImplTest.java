@@ -58,7 +58,7 @@ public class CustomerServiceImplTest {
         customer.setFirstname(FIRSTNAME);
         customer.setLastname(LASTNAME);
 
-        when(customerRepository.findByName(Mockito.anyString())).thenReturn(customer);
+        when(customerRepository.findByFirstname(Mockito.anyString())).thenReturn(customer);
 
         CustomerDTO customerDTO = customerService.getCustomerByName(FIRSTNAME);
 
