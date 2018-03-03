@@ -2,6 +2,7 @@ package guru.springfamework.service;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.controller.ResourceNotFoundException;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDTO getCustomerByName(String name) {
-        return customerMapper.customerToCustomerDTO(customerRepository.findByFirstname(name));
+
+        return customerRepository.findByFirstname(name)
+                .map(customerMapper::customerToCustomerDTO)
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override

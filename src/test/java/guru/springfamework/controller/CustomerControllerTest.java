@@ -39,7 +39,10 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(customerController)
+                .setControllerAdvice(new RestResponseEntityExceptionHandler())
+                .build();
     }
 
     @Test
@@ -141,5 +144,15 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk());
 
         verify(customerService).deleteCustomerById(anyLong());
+    }
+
+    @Test
+    public void testGetCustomerByNameNotFound() throws Exception {
+
+        when(customerService.getCustomerByName(anyString())).thenThrow(ResourceNotFoundException.class);
+
+        mockMvc.perform(get("/api/v1/customers/Joew").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
     }
 }

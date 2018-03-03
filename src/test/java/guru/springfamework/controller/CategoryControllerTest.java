@@ -35,7 +35,9 @@ public class CategoryControllerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(categoryController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(categoryController)
+                .setControllerAdvice(new RestResponseEntityExceptionHandler())
+                .build();
     }
 
     @Test
@@ -66,5 +68,15 @@ public class CategoryControllerTest {
         mockMvc.perform(get("/api/v1/categories/Joe").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", Matchers.equalTo(NAME)));
+    }
+
+    @Test
+    public void testGetCategoryByNameNotFound() throws Exception {
+
+        when(categoryService.getCategoryByName(anyString())).thenThrow(ResourceNotFoundException.class);
+
+        mockMvc.perform(get("/api/v1/categories/Joew").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
     }
 }

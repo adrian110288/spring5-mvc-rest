@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -59,7 +60,7 @@ public class CustomerServiceImplTest {
         customer.setFirstname(FIRSTNAME);
         customer.setLastname(LASTNAME);
 
-        when(customerRepository.findByFirstname(Mockito.anyString())).thenReturn(customer);
+        when(customerRepository.findByFirstname(Mockito.anyString())).thenReturn(Optional.of(customer));
 
         CustomerDTO customerDTO = customerService.getCustomerByName(FIRSTNAME);
 
@@ -96,6 +97,5 @@ public class CustomerServiceImplTest {
         customerRepository.deleteById(id);
 
         verify(customerRepository, times(1)).deleteById(anyLong());
-
     }
 }
